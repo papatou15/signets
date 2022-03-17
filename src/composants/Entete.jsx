@@ -1,12 +1,8 @@
 import './Entete.scss';
 import Avatar from '@mui/material/Avatar';
-import {authFirebase} from '../code/init';
+import {deconnexion} from '../code/utilisateur-modele'
 
 export default function Entete({utilisateur}) {
-
-  function deconnexion(){
-    authFirebase.signOut()
-  }
 
   return (
     <header className="Entete">

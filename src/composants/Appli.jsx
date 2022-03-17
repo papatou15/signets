@@ -5,8 +5,7 @@ import Accueil from './Accueil';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { authFirebase } from '../code/init';
+import { observerEtatConnexion } from '../code/utilisateur-modele';
 
 export default function Appli() {
   // État 'utilisateur'
@@ -15,7 +14,7 @@ export default function Appli() {
   //Surveiller l'état de la connexion FirebaseAuth
 
   useEffect(
-    () => onAuthStateChanged(authFirebase, (user) => setUtilisateur(user)),
+    () => observerEtatConnexion(setUtilisateur),
     []
   );
 

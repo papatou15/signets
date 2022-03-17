@@ -1,12 +1,8 @@
 import './Accueil.scss';
 import logoGoogle from '../images/google-logo.png';
-import { authFirebase, authGoogle } from '../code/init';
-import { signInWithPopup } from 'firebase/auth';
+import {connexion} from '../code/utilisateur-modele';
 
 export default function Accueil() {
-  function connexion(){
-    signInWithPopup(authFirebase, authGoogle)
-  }
 
   return (
     <div className="Accueil">
