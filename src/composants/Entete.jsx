@@ -1,15 +1,23 @@
 import './Entete.scss';
 import Avatar from '@mui/material/Avatar';
-import avatarImg from '../images/avatar.png';
+import {authFirebase} from '../code/init';
 
-export default function Entete() {
+export default function Entete({utilisateur}) {
+
+  function deconnexion(){
+    authFirebase.signOut()
+  }
+
   return (
     <header className="Entete">
       <div className="logo">Signets</div>
-      <div className="utilisateur">
-        Camille Semaan 
-        <Avatar className="avatar" alt="Camille Semaan" src={avatarImg} />
-      </div>
+      <nav>
+        <div className="utilisateur">
+          {utilisateur.displayName}
+          <Avatar className="avatar" alt={utilisateur.displayName} src={utilisateur.photoURL} />
+        </div>
+        <div className="btn-deconnexion" onClick={deconnexion}>Déconnexion</div>
+      </nav>
     </header>
   );
 }
