@@ -1,5 +1,5 @@
 import { bdFirestore } from "./init";
-import { getDocs, query, orderBy, collection, addDoc, Timestamp, getDoc, deleteDoc, doc } from "firebase/firestore";
+import { getDocs, query, orderBy, collection, addDoc, Timestamp, getDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 /**
  * Obtenir tous les dossiers d'un utilisateur triés pas date de modification récente
@@ -43,4 +43,13 @@ export async function creer(idUtilisateur, dossier) {
 export async function supprimer(uid, idDossier) {
     let refDoc = doc(bdFirestore, "signets", uid, "dossiers", idDossier);
     deleteDoc(refDoc);
+}
+
+/**
+ * Modifier les propriété d'un dossier pour l'utilisateur connecté
+ */
+
+export async function modifier(uid, idDossier, objetModif) {
+    let docRef = doc(bdFirestore, "signets", uid, "dossiers", idDossier);
+    return await updateDoc(docRef, objetModif);
 }

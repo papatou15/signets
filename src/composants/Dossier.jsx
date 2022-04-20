@@ -7,32 +7,37 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import couvertureDefaut from '../images/couverture-defaut.png';
 import { formaterDate } from '../code/helper';
+import * as dossierModele from '../code/dossier-modele.js'
+import ModificationDossier from './ModifierDossier'
 
-export default function Dossier({id, titre, couleur, dateModif, couverture, supprimerDossier}) {
-
+export default function Dossier({id, titre, couleur, dateModif, couverture, supprimerDossier, gererModifierDossier}) {
+  // État du menu contextuel
   const [eltAncrage, setEltAncrage] = useState(null);
-  const ouvert = Boolean(eltAncrage);
+  const ouvertMenu = Boolean(eltAncrage);
+
+  // État du formulaire de modification
+  const [ouvertFrm, setOuvertFrm] = useState(false);
 
   function gererMenu(event){
     setEltAncrage(event.currentTarget);
   }
 
-  function gererFermer(){
+  function gererFermerMenu(){
     setEltAncrage(null);
   }
   
   function gererFormulaireModifier(){
     // Ouvrir le formulaire de modification du dossier (transférer l'info dossier dans le formulaire) ...
-
+    setOuvertFrm(true);
     // ... puis fermer le menu
-    gererFermer();
+    gererFermerMenu();
   }
 
   function gererSupprimer(){
     // Appeler la fonction de ListeDossiers qui gère la suppression dans Firestore...
     supprimerDossier(id);
     // ...puis fermer le menu
-    gererFermer();
+    gererFermerMenu();
   }
 
   // Tester si l'URL dans la variable couverture est valide
@@ -63,8 +68,8 @@ export default function Dossier({id, titre, couleur, dateModif, couverture, supp
       <Menu
         id="menu-contextuel-dossier"
         anchorEl={eltAncrage}
-        open={ouvert}
-        onClose={gererFermer}
+        open={ouvertMenu}
+        onClose={gererFermerMenu}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -77,6 +82,7 @@ export default function Dossier({id, titre, couleur, dateModif, couverture, supp
         <MenuItem onClick={gererFormulaireModifier}>Modifier</MenuItem>
         <MenuItem onClick={gererSupprimer}>Supprimer</MenuItem>
       </Menu>
+      <ModificationDossier ouvert={ouvertFrm} setOuvert={setOuvertFrm} id={id} titre_p={titre} couleur_p={couleur} couverture_p={couverture} gererModifierDossier={gererModifierDossier}/>
     </article>
   );
 }

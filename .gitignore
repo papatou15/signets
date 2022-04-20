@@ -3,6 +3,15 @@
 # Ignorer le fichier de config Firebase
 /src/code/config.js
 
+# Ignorer les fichiers ajoutés par la configuration Firebase Hosting
+
+/.firebase
+.firebaserc
+firebase.json
+firebase.indexes.json
+firestore.rules
+storage.rules
+
 # Ignorer .eslintcache
 .eslintcache
 
