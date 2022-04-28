@@ -15,14 +15,15 @@
     padding: 0 1.25rem;
   }
 
-  nav{
+  nav {
     display: flex;
-  
+    justify-content: flex-end;
+    align-items: center;
 
     .utilisateur {
+      display: flex;
       align-items: center;
       cursor: pointer;
-      display: flex;
       .avatar {
         margin-left: 1.25rem;
         width: 2rem;
@@ -30,13 +31,13 @@
       }
     }
 
-    .btn-deconnexion{
+    .btn-deconnexion {
       margin-left: 1rem;
       background-color: #900;
       padding: 5px;
-      border: 1px solid red;
-      border-radius:3px;
-      box-shadow:1px 1px 10px 1px red;
+      border: 1px solid #600;
+      border-radius: 3px;
+      box-shadow: 1px 1px 10px 1px #888;
       cursor: pointer;
     }
   }

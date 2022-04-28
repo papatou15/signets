@@ -1,16 +1,15 @@
-import { useState } from 'react';
 import './Dossier.scss'; 
 import IconButton from '@mui/material/IconButton';
 import SortIcon from '@mui/icons-material/Sort';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import couvertureDefaut from '../images/couverture-defaut.png';
+import couvertureDefaut from '../images/couverture-defaut.webp';
 import { formaterDate } from '../code/helper';
-import * as dossierModele from '../code/dossier-modele.js'
-import ModificationDossier from './ModifierDossier'
+import { useState } from 'react';
+import FrmDossier from './FrmDossier';
 
-export default function Dossier({id, titre, couleur, dateModif, couverture, supprimerDossier, gererModifierDossier}) {
+export default function Dossier({id, titre, couleur, dateModif, couverture, supprimerDossier, modifierDossier}) {
   // État du menu contextuel
   const [eltAncrage, setEltAncrage] = useState(null);
   const ouvertMenu = Boolean(eltAncrage);
@@ -18,25 +17,28 @@ export default function Dossier({id, titre, couleur, dateModif, couverture, supp
   // État du formulaire de modification
   const [ouvertFrm, setOuvertFrm] = useState(false);
 
-  function gererMenu(event){
+  function gererMenu(event) {
     setEltAncrage(event.currentTarget);
-  }
+  };
 
-  function gererFermerMenu(){
+  function gererFermerMenu() {
+    
     setEltAncrage(null);
-  }
-  
-  function gererFormulaireModifier(){
-    // Ouvrir le formulaire de modification du dossier (transférer l'info dossier dans le formulaire) ...
+  };
+
+  function afficherFormulaireDossier() {
+    // Ouvrir le formulaire de modification du dossier (transférer l'info sir le
+    // dossier dans le formulaire) ...
     setOuvertFrm(true);
-    // ... puis fermer le menu
+    // ... puis fermer le menu.
     gererFermerMenu();
   }
-
-  function gererSupprimer(){
-    // Appeler la fonction de ListeDossiers qui gère la suppression dans Firestore...
+  
+  function gererSupprimer() {
+    // Appeler la fonction de ListeDossiers qui gère la suppression dans Firestore
     supprimerDossier(id);
-    // ...puis fermer le menu
+
+    // ... puis fermer le menu.
     gererFermerMenu();
   }
 
@@ -48,14 +50,37 @@ export default function Dossier({id, titre, couleur, dateModif, couverture, supp
   catch(e) {
     couverture = couvertureDefaut;
   }
+
+  // État dropzone
+  const [dropzone, setDropzone] = useState(false);
+
+  function gererDragEnter(evt){
+    evt.preventDefault();
+    setDropzone(true);
+  }
+
+  function gererDragOver(evt){
+    evt.preventDefault();
+  }
+
+  function gererDragLeave(evt){
+    evt.preventDefault();
+    setDropzone(false);
+  }
+
+  function gererDrop(evt){
+    evt.preventDefault();
+    setDropzone(false);
+  }
+
   return (
     // Remarquez l'objet JS donné à la valeur de l'attribut style en JSX, voir : 
     // https://reactjs.org/docs/dom-elements.html#style
-    <article className="Dossier" style={{backgroundColor: couleur}}>
+    <article className={"Dossier" + (dropzone ? ' dropzone' : '')} onDragEnter={gererDragEnter} onDragOver={gererDragOver} onDragLeave={gererDragLeave} onDrop={gererDrop} style={{backgroundColor: couleur}}>
+      <IconButton className="deplacer" aria-label="déplacer" disableRipple={true}>
+        <SortIcon />
+      </IconButton>
       <div className="couverture">
-        <IconButton className="deplacer" aria-label="déplacer" disableRipple={true}>
-          <SortIcon />
-        </IconButton>
         <img src={couverture || couvertureDefaut} alt={titre}/>
       </div>
       <div className="info">
@@ -79,10 +104,10 @@ export default function Dossier({id, titre, couleur, dateModif, couverture, supp
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={gererFormulaireModifier}>Modifier</MenuItem>
+        <MenuItem onClick={afficherFormulaireDossier}>Modifier</MenuItem>
         <MenuItem onClick={gererSupprimer}>Supprimer</MenuItem>
       </Menu>
-      <ModificationDossier ouvert={ouvertFrm} setOuvert={setOuvertFrm} id={id} titre_p={titre} couleur_p={couleur} couverture_p={couverture} gererModifierDossier={gererModifierDossier}/>
+      <FrmDossier gererActionDossier={modifierDossier} ouvert={ouvertFrm} setOuvert={setOuvertFrm} id={id} titre_p={titre} couleur_p={couleur} couverture_p={couverture} />
     </article>
   );
 }

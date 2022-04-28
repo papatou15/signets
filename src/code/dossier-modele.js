@@ -1,15 +1,16 @@
 import { bdFirestore } from "./init";
-import { getDocs, query, orderBy, collection, addDoc, Timestamp, getDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { getDocs, query, orderBy, collection, addDoc, Timestamp, getDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
 
 /**
- * Obtenir tous les dossiers d'un utilisateur triés pas date de modification récente
+ * Obtenir tous les dossiers d'un utilisateur triés par date de modification descendante
  * @param {string} idUtilisateur Identifiant Firebase de l'utilisateur connecté
  * @returns {Promise<any[]>} Promesse avec le tableau des dossiers lorsque complétée
  */
 export async function lireTout(idUtilisateur) {
-    return getDocs(query(collection(bdFirestore, 'signets', idUtilisateur, 'dossiers'), orderBy("dateModif", "desc"))).then(
-        res => res.docs.map(doc => ({id: doc.id, ...doc.data()}))
-    );
+    return getDocs(query(collection(bdFirestore, 'signets', idUtilisateur, 'dossiers'), 
+        orderBy("dateModif", "desc"))).then(
+            res => res.docs.map(doc => ({id: doc.id, ...doc.data()}))
+        );
 }
 
 /**
@@ -42,14 +43,15 @@ export async function creer(idUtilisateur, dossier) {
  */
 export async function supprimer(uid, idDossier) {
     let refDoc = doc(bdFirestore, "signets", uid, "dossiers", idDossier);
-    deleteDoc(refDoc);
+    return await deleteDoc(refDoc)
 }
 
 /**
- * Modifier les propriété d'un dossier pour l'utilisateur connecté
+ * Modifier les propriétés d'un dossier pour l'utilisateur connecté
+ * 
  */
-
 export async function modifier(uid, idDossier, objetModif) {
-    let docRef = doc(bdFirestore, "signets", uid, "dossiers", idDossier);
+    objetModif.dateModif = Timestamp.now();
+    const docRef = doc(bdFirestore, "signets", uid, "dossiers", idDossier);
     return await updateDoc(docRef, objetModif);
 }
