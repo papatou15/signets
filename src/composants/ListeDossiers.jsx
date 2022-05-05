@@ -1,9 +1,13 @@
 import './ListeDossiers.scss';
 import Dossier from './Dossier';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import * as dossierModele from '../code/dossier-modele';
+import { UtilisateurContext } from './Appli';
 
-export default function ListeDossiers({utilisateur, dossiers, setDossiers}) {
+export default function ListeDossiers({dossiers, setDossiers}) {
+  // Lire la variable globale UtilisateurContext
+  const utilisateur = useContext(UtilisateurContext);
+
   // Lire les dossiers (de l'utilisateur connecté) dans Firestore
   useEffect(
     () => dossierModele.lireTout(utilisateur.uid).then(
@@ -41,10 +45,7 @@ export default function ListeDossiers({utilisateur, dossiers, setDossiers}) {
     );
   }
 
-  function ajouterSignet(idDossier, url){
-    console.log("ID du dossier et URL à ajouter : " )
-  }
-
+  
   return (
     <ul className="ListeDossiers">
       {
